@@ -13,7 +13,7 @@
 int main(int argc, char * argv[])
 {
 	
-	if (argc < MIN_ARGS)//si no se enviaron suficientes argumento salgo
+	if (argc <= MIN_ARGS)//si no se enviaron suficientes argumento salgo
 		return 1;
 	char bufferXmlx[SIZE_BUFFER_XMLX];//buffer donde se almacena temporalemnte la partes del archivo xmlx
 	UserData _data;//donde se almacena la informacion del archivo xmlx
