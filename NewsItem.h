@@ -8,8 +8,9 @@ public:
 	NewsItem();
 	~NewsItem();
 
-	std::string getTitle();
-	std::string getPubDate();
+	std::string getTitle();	
+	std::string getPubDate();			//devuelve pubdate as-is
+	std::string getFormattedPubDate();	//devuelve pubdate en formato DD/MM/AA – hh:mm
 
 private:
 	std::string title;		//titulo y pubdate, vienen del parser tan como figuraban en el rss
