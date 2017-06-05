@@ -21,7 +21,7 @@ void startTag(void * userData, const XML_Char * name, const XML_Char ** atts)
 
 		if (strcmp(name, "item") == 0) {
 			ud->whereAmI = IN_ITEM;
-			ud->currentItem = new NewsItem;	//en este nuevo objeto voy a guardar lo que me vaya llegando de item
+			ud->currentItem = new NewsItem ();	//en este nuevo objeto voy a guardar lo que me vaya llegando de item
 		}
 		else if (strcmp(name, "title") == 0) {
 			ud->whereAmI = IN_CH_IN_TITLE; //la proxima data va a ser channelTitle
@@ -74,10 +74,10 @@ void endTag(void * userData, const XML_Char * name)
 		ud->isValid = false;
 		return;
 	}
-	if (strcmp(ud->waitingForEndTag, name) == 0) {// solo si llego el endtag que estaba esperando
-		switch (ud->whereAmI) {  //(puede que no haya registrado el startTag porque no era relevante)
+	if (strcmp(ud->waitingForEndTag, name) == 0) {	// solo si llego el endtag que estaba esperando
+		switch (ud->whereAmI) {						//(puede que no haya registrado el startTag porque no era relevante)
 		case IN_CHANNEL:
-			ud->waitingForEndTag = NULL; //una vez que llega el endtag de channel ya tengo todo lo que necesito
+			ud->waitingForEndTag = NULL;			//una vez que llega el endtag de channel ya tengo todo lo que necesito
 			ud->whereAmI = FINISHED;
 			break;
 

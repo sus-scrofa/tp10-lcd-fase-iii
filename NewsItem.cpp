@@ -6,6 +6,12 @@ NewsItem::NewsItem()
 	;
 }
 
+NewsItem::NewsItem(std::string title, std::string pubdate)
+{
+	this->title = title;
+	this->pubDate = pubDate;
+}
+
 NewsItem::~NewsItem()
 {
 	;
@@ -54,11 +60,11 @@ std::string NewsItem::getFormattedPubDate()
 			n++;
 		}
 
-		pos += 4;							//apunto a donde empieza el anio
-		pd.append(pubDate.substr(pos, 4));	//obtengo los cuatro digitos
-		pd.append(" - ");					//ahora tengo "DD/MM/YYYY - "
+		pos += 6;							//apunto a donde empiezan los dos ultimos digitos del anio
+		pd.append(pubDate.substr(pos, 2));	//obtengo los cuatro digitos
+		pd.append(" - ");					//ahora tengo "DD/MM/YY - "
 	
-		pd += pubDate.substr(pos + 5, 5); //copio la hora
+		pd += pubDate.substr(pos + 3, 5); //copio la hora
 
 	}
 

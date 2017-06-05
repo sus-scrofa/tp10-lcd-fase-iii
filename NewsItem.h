@@ -6,6 +6,7 @@ class NewsItem
 {
 public:
 	NewsItem();
+	NewsItem(std::string title, std::string pubdate);
 	~NewsItem();
 
 	std::string getTitle();	
