@@ -69,12 +69,37 @@ bool downloadXML::saveXMLtoFile(std::string filename, std::string linkOfXML)
 //*************************************************************************	
 	
 	int i;//variable donde se almacenana los caracteres recividos del servidor, y tambien si hubo o no error
+	bool quitHeader = false;
 	do {
+		//<?xml
 		i = client->receiveDataForServidor(buffRecive, SIZE_RECIVE);
 		if (i != MY_EMPTY&&i != MY_ERROR)
 		{
+			
 			for (int j = 0; j < i; j++)//guardo lo recivido en el archvio deseado.
 			{
+				if (((j + 4) < i)&& !quitHeader)
+				{
+					if (buffRecive[j] == '<')
+					{
+						if (buffRecive[j+1] == '?')
+						{
+							if (buffRecive[j + 2] == 'x')
+							{
+								if (buffRecive[j + 3] == 'm')
+								{
+									if (buffRecive[j + 4] == 'l')
+									{
+										quitHeader = true;
+
+									}
+								}
+							}
+						}
+
+					}
+				}
+				if(quitHeader)
 				_fputc_nolock(buffRecive[j], outputFile);
 			}
 		}
@@ -84,7 +109,7 @@ bool downloadXML::saveXMLtoFile(std::string filename, std::string linkOfXML)
 	client->~cliente();//termino la coneccion con el servidor
 	
 
-	return 0;
+	return true;
 		
 }
 

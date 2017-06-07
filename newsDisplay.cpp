@@ -11,7 +11,7 @@ NewsDisplay::NewsDisplay(UserData * data)
 	{
 		currNews = this->itemL->begin();
 		fTitle = std::string(CHARXROW, ' ') + data->getChannelName() + " - " + currNews->getTitle();
-		itemL->push_back(NewsItem(std::string(CHARXROW, ' '), std::string("Ultimo titular")));	//Elemento que se muestra cuando ya pasaron todas las noticias del feed
+		fDate = currNews->getFormattedPubDate();
 	}
 	else	//si la lista esta vacia, es imposible mostrar noticias
 	{
@@ -47,19 +47,13 @@ bool NewsDisplay::updateDisplay()
 	}
 	else	//si se termino el titulo actual y era el ultimo
 	{
-		std::cout << "Usted esta informado" << std::endl;
 		return true;
 	}
 	return false;
 }
 
 bool NewsDisplay::showNews()
-{
-#ifdef DEBUG
-	system("cls");
-#endif // DEBUG
-
-	
+{	
 	if(scrollPos > fTitle.size())
 	{
 		return false;	//indicar que no hay caracteres del titulo para mostrar
@@ -67,21 +61,18 @@ bool NewsDisplay::showNews()
 	if (scrollPos == 0)
 	{
 		display->lcdClear();
-		(*display) << currNews->getFormattedPubDate();
+		(*display) << fDate;
 	}
 	//Si hay caracteres para mostrar, borrar display, escribir fecha, posicionar cursor en el inicio de la segunda linea
 	display->lcdSetCursorPosition({ SECOND_ROW, 0 });
-	display->lcdClearToEOL();
+ 	display->lcdClearToEOL();
 	//iterar por los 16 o menos caracteres que deben ser impresos y mandarselos al display
 	std::string::iterator it = fTitle.begin();
+
 	std::for_each(it + scrollPos,
 		it + std::min<unsigned int>(scrollPos + CHARXROW, fTitle.size()),
 		[this](const char& titleChar) { (*display) << titleChar; });	//por CHARXROW caracteres, imprimirolos en el display
-
-#ifdef DEBUG
-	((myDisplay *)display)->printDDRAM();
-#endif // DEBUG
-
+	
 	return true;
 }
 
@@ -89,17 +80,22 @@ void NewsDisplay::nextNews()
 {
 	//currNews, por ser un iterador bidireccional, no tiene definido los operadores '<' o '>' 
 	//ni permite escribir 'currNews + 1', por lo que se implementa el siguiente metodo para 
-	//controlar que currNews no se exceda de los elementos de la lista. Se prefiere este metodo 
-	//por sobre hacer:
-	//		if(curr != (--itemL.end()) {currNews++}
-	//ya que la implementacion usada en todos los casos menos el ultimo tiene solo un incremento,
-	//mientras que la otra opcion tiene un incremento y un decremento
-
-	if (++currNews == itemL->end())	
+	//controlar que currNews no se exceda de los elementos de la lista. 
+	if (!(currNews == itemL->end()))	//si currNews es distinto de end(), es menor.
 	{
-		currNews--;			//desincrementar si el incremento anterior se "paso" del ultimo item (end() es past-the-end)
+		currNews++;
+		if (currNews == itemL->end())	//Si ya se leyeron todas las noticias
+		{
+			fDate = std::string("");
+			fTitle = std::string(CHARXROW, ' ') + std::string("Ultima noticia");
+		}
+		else	//Si quedan noticias por leer
+		{
+			fDate = currNews->getFormattedPubDate();
+			fTitle = std::string(CHARXROW, ' ') + channelName + " - " + currNews->getTitle();
+		}
 	}
-	fTitle = std::string(CHARXROW, ' ') + channelName + " - " + currNews->getTitle();
+
 	scrollPos = 0;
 }
 
@@ -108,6 +104,8 @@ void NewsDisplay::prevNews()
 	if (currNews != itemL->begin())
 	{
 		currNews--;
+		fDate = currNews->getFormattedPubDate();
+		fTitle = std::string(CHARXROW, ' ') + channelName + " - " + currNews->getTitle();
 	}
 	scrollPos = 0;
 }

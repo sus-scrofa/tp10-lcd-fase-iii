@@ -75,15 +75,15 @@ FT_STATUS lcdWriteNibble(FT_HANDLE * h, BYTE value,BYTE rs)
 	buffer[0] |= rs;//pongo en modo correspondiente el bit rs;
 	if ((status = FT_Write(*h, buffer, SIZE_BUFFER, &byteSent)) == FT_OK)//enable en 0
 	{
-		std::this_thread::sleep_for(std::chrono::milliseconds(1));
+		std::this_thread::sleep_for(std::chrono::microseconds(100));
 		buffer[0] |= LCD_E_ON;//enable en 1
 		if ((status = FT_Write(*h, buffer, SIZE_BUFFER, &byteSent)) == FT_OK)
 		{
-			std::this_thread::sleep_for(std::chrono::milliseconds(10));
+			std::this_thread::sleep_for(std::chrono::microseconds(200));
 			buffer[0] &= LCD_E_OFF;//enable en 0
 			if ((status = FT_Write(*h, buffer, SIZE_BUFFER, &byteSent)) == FT_OK)
 			{
-				std::this_thread::sleep_for(std::chrono::milliseconds(1));
+				std::this_thread::sleep_for(std::chrono::microseconds(100));
 			}
 		}
 	}

@@ -25,6 +25,7 @@ private:
 	std::list<NewsItem> * itemL;	//
 	std::list<NewsItem>::iterator currNews;
 	std::string channelName;		//Nombre del canal del que se pasan las noticias
+	std::string fDate;				//Fecha y hora de la noticia con el formato DD/MM/AA - HH:MM
 	std::string fTitle;				//Title de la noticia actual con el diguiente formato: string(CHARXROW, ' ') +  "channel name" + "title".
 	bool valid;						//indica si hubieron errores en el constructor
 };
