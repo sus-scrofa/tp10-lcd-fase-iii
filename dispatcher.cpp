@@ -22,23 +22,23 @@ bool dispatcher::dispatch(ALLEGRO_EVENT * ev)
 	{
 		switch (ev->keyboard.keycode)
 		{
-			case 'R':
+			case ALLEGRO_KEY_R:
 				news->restartNews();
 				break;
-			case 'S':
+			case ALLEGRO_KEY_S:
 				news->nextNews();
 				break;
-			case 'A':
+			case ALLEGRO_KEY_A:
 				news->prevNews();
 				break;
-			case 'Q':
+			case ALLEGRO_KEY_Q:
 				endScrolling = true;
 				break;
 			case '+':
-				al_set_timer_speed(timer, std::max(al_get_timer_speed(timer) - 0.1, MAX_SPEED));	//establecer una velocidad maxima
+				al_set_timer_speed(timer, std::max<double>(al_get_timer_speed(timer) - 0.1, MAX_SPEED));	//establecer una velocidad maxima
 				break;
 			case '-':
-				al_set_timer_speed(timer, std::min(al_get_timer_speed(timer) + 0.1, MIN_SPEED));	//establecer una velocidad minima
+				al_set_timer_speed(timer, std::min<double>(al_get_timer_speed(timer) + 0.1, MIN_SPEED));	//establecer una velocidad minima
 				break;
 			default:
 				break;

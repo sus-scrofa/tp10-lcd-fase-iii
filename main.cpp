@@ -10,8 +10,8 @@
 #include "dispatcher.h"
 #include "newsItem.h"
 
-bool initAllegro(ALLEGRO_EVENT_QUEUE ** evQ, ALLEGRO_TIMER ** timer);
-void shutdownAllegro(ALLEGRO_EVENT_QUEUE ** evQ, ALLEGRO_TIMER ** timer);
+bool initAllegro(ALLEGRO_EVENT_QUEUE ** evQ, ALLEGRO_TIMER ** timer, ALLEGRO_DISPLAY ** display);
+void shutdownAllegro(ALLEGRO_EVENT_QUEUE ** evQ, ALLEGRO_TIMER ** timer, ALLEGRO_DISPLAY ** display);
 
 #define MIN_ARGS 1
 #define SIZE_BUFFER_XMLX 100000
@@ -57,9 +57,10 @@ int main(int argc, char * argv[])
 
 	ALLEGRO_EVENT_QUEUE * evQ = nullptr;
 	ALLEGRO_TIMER * timer = nullptr;
+	ALLEGRO_DISPLAY * display = nullptr;
 	ALLEGRO_EVENT ev;
 
-	if(!initAllegro(&evQ, &timer))
+	if(!initAllegro(&evQ, &timer, &display))
 	{
 		std::cout << "Error inicializando Allegro" << std::endl;
 		return -1;
@@ -85,15 +86,15 @@ int main(int argc, char * argv[])
 
 	} while (!endScrolling);
 
-	shutdownAllegro(&evQ, &timer);
+	shutdownAllegro(&evQ, &timer, &display);
 	
 	return 0;
 }
 
 
-bool initAllegro(ALLEGRO_EVENT_QUEUE ** evQ, ALLEGRO_TIMER ** timer)
+bool initAllegro(ALLEGRO_EVENT_QUEUE ** evQ, ALLEGRO_TIMER ** timer, ALLEGRO_DISPLAY ** display)
 {
-	if (!al_init() || !al_install_keyboard())	//por evaluacion lazy, solo se llama a al_install_keyboard() si al_init() fue exitoso
+	if (!al_init() || !al_install_keyboard() || !al_create_display(300, 300))	//por evaluacion lazy, solo se llama a al_install_keyboard() si al_init() fue exitoso
 	{
 		return false;
 	}
@@ -105,7 +106,7 @@ bool initAllegro(ALLEGRO_EVENT_QUEUE ** evQ, ALLEGRO_TIMER ** timer)
 	return true;
 }
 
-void shutdownAllegro(ALLEGRO_EVENT_QUEUE ** evQ, ALLEGRO_TIMER ** timer)
+void shutdownAllegro(ALLEGRO_EVENT_QUEUE ** evQ, ALLEGRO_TIMER ** timer, ALLEGRO_DISPLAY ** display)
 {
 	al_unregister_event_source(*evQ, al_get_keyboard_event_source());
 	al_unregister_event_source(*evQ, al_get_timer_event_source(*timer));

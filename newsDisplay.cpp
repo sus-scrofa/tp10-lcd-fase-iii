@@ -59,21 +59,23 @@ bool NewsDisplay::showNews()
 	system("cls");
 #endif // DEBUG
 
-
+	
 	if(scrollPos > fTitle.size())
 	{
 		return false;	//indicar que no hay caracteres del titulo para mostrar
 	}
-
+	if (scrollPos == 0)
+	{
+		display->lcdClear();
+		(*display) << currNews->getFormattedPubDate();
+	}
 	//Si hay caracteres para mostrar, borrar display, escribir fecha, posicionar cursor en el inicio de la segunda linea
-	display->lcdClear();
-	(*display) << currNews->getFormattedPubDate();
-	display->lcdSetCursorPosition({ ROWSXLINE, 0 });
-
+	display->lcdSetCursorPosition({ SECOND_ROW, 0 });
+	display->lcdClearToEOL();
 	//iterar por los 16 o menos caracteres que deben ser impresos y mandarselos al display
 	std::string::iterator it = fTitle.begin();
 	std::for_each(it + scrollPos,
-		it + std::min(scrollPos + CHARXROW, fTitle.size()),
+		it + std::min<unsigned int>(scrollPos + CHARXROW, fTitle.size()),
 		[this](const char& titleChar) { (*display) << titleChar; });	//por CHARXROW caracteres, imprimirolos en el display
 
 #ifdef DEBUG
